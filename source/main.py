@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 
 app = FastAPI(
@@ -8,8 +8,18 @@ app = FastAPI(
 
 
 @app.get("/")
-def greet():
-    return {"message": f"Hello"}
+def greet(
+    request: Request,
+    name: str = "Alex",
+):
+    docs_url = request.url.replace(
+        path="/docs",
+        query="",
+    )
+    return {
+        "message": f"Hello, {name}!",
+        "docs_url": docs_url,
+    }
 
 
 if __name__ == "__main__":
