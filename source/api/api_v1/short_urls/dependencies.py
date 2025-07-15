@@ -1,22 +1,24 @@
+from fastapi import HTTPException
+from starlette import status
 from .schemas import ShortUrl
-
-SHORT_URLS = [
-    ShortUrl(
-        target_url="http://google.com",
-        slug="search",
-    ),
-    ShortUrl(
-        target_url="http://rutube.ru",
-        slug="video",
-    ),
-]
+from .crud import storage
 
 
 
 
-def prefetch_short_url(slug: str):
-    url: ShortUrl | None = next((url for url in SHORT_URLS if url.slug == slug), None)
+def prefetch_short_url(
+        slug: str
+) -> ShortUrl:
 
-    return url
+    url: ShortUrl | None = storage.get_by_slug(slug=slug)
+    # next((url for url in SHORT_URLS if url.slug == slug), None))
+
+    if url:
+        return url
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"URL {slug!r} not found",
+    )
 
 
