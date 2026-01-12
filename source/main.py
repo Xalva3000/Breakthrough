@@ -9,16 +9,29 @@ from fastapi import (
     HTTPException,
 )
 from fastapi.responses import RedirectResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from api import router as api_router
 from api.api_v1.short_urls.schemas import ShortUrl
 from api.api_v1.short_urls.dependencies import prefetch_short_url
 from typing import Annotated
+import logging
+from core import config
+from app_lifespan import lifespan
+
+
+logging.basicConfig(
+    level=config.LOG_LEVEL,
+)
+
 
 
 # Инициализация fastapi класса
 app = FastAPI(
     title="Breakthrough",
+    lifespan=lifespan,
 )
+
+security = HTTPBearer()
 
 # Подключение всех роутеров
 app.include_router(api_router)
@@ -42,7 +55,13 @@ def greet(
 
 @app.get("/r/{slug}")
 @app.get("/r/{slug}/")
-def redirect_short_url(slug, url: Annotated[ShortUrl, Depends(prefetch_short_url)]):
+def redirect_short_url(
+        slug,
+        url: Annotated[
+            ShortUrl,
+            Depends(prefetch_short_url)
+        ]
+):
     if url:
         return RedirectResponse(url=url.target_url)
     raise HTTPException(

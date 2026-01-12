@@ -1,3 +1,3 @@
-__all__ = ("router",)
+__all__ = ("router", "detail_router")
 
-from .views import router
+from .views import router, detail_router
