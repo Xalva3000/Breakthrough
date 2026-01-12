@@ -12,10 +12,7 @@ from fastapi import Request, HTTPException, status, Depends, APIRouter, Form
 router = APIRouter(prefix="/short-urls")
 
 
-@router.get(
-    "/list/",
-    response_model=list[ShortUrl]
-)
+@router.get("/list/", response_model=list[ShortUrl])
 def read_short_urls_list() -> list[ShortUrl]:
     return storage.get_all()
 
@@ -26,8 +23,7 @@ def redirect_short_url(slug, url: Annotated[ShortUrl, Depends(prefetch_short_url
     if url:
         return RedirectResponse(url=url.target_url)
     raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"URL {slug!r} not found"
+        status_code=status.HTTP_404_NOT_FOUND, detail=f"URL {slug!r} not found"
     )
 
 
@@ -55,20 +51,11 @@ def create_short_url(
         status.HTTP_404_NOT_FOUND: {
             "description": "SHORT_URL not found",
             "content": {
-                "application/json": {
-                    "example": {
-                        "detail": "URL 'slug' not found"
-                    }
-                }
-            }
+                "application/json": {"example": {"detail": "URL 'slug' not found"}}
+            },
         }
-    }
+    },
 )
-def delete_short_url(
-    url: Annotated[
-        ShortUrl,
-        Depends(prefetch_short_url)
-    ]
-) -> None:
+def delete_short_url(url: Annotated[ShortUrl, Depends(prefetch_short_url)]) -> None:
     # storage.delete_by_slug(slug)
     storage.delete(short_url=url)

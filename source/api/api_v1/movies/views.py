@@ -8,14 +8,15 @@ from fastapi import Request, HTTPException, status, Depends, APIRouter
 router = APIRouter(prefix="/movies")
 
 
-
 @router.get("/list/")
 def get_movies_list():
     return MOVIES_LIST
 
 
 @router.get("/{movie_id}/")
-def get_movie_data_by_id(movie_id, movie_data: Annotated[Movie, Depends(prefetch_movie_data)]):
+def get_movie_data_by_id(
+    movie_id, movie_data: Annotated[Movie, Depends(prefetch_movie_data)]
+):
     if movie_data:
         return {"movie_data": movie_data}
     raise HTTPException(

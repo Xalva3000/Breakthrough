@@ -1,13 +1,13 @@
 import logging
 
 from fastapi import (
-        HTTPException, 
-        BackgroundTasks, 
-        Request,
-        # Query,
-        Header,
-        status,
-        Depends,
+    HTTPException,
+    BackgroundTasks,
+    Request,
+    # Query,
+    Header,
+    status,
+    Depends,
 )
 from fastapi.security import (
     HTTPBearer,
@@ -37,16 +37,15 @@ user_basic_auth = HTTPBasic(
 )
 
 UNSAFE_METHODS = {
-        "PUT",
-        "PATCH",
-        "POST",
-        "UPDATE",
-        "DELETE",
-    }
+    "PUT",
+    "PATCH",
+    "POST",
+    "UPDATE",
+    "DELETE",
+}
 
-def prefetch_short_url(
-        slug: str
-) -> ShortUrl:
+
+def prefetch_short_url(slug: str) -> ShortUrl:
 
     url: ShortUrl | None = storage.get_by_slug(slug=slug)
     # next((url for url in SHORT_URLS if url.slug == slug), None))
@@ -59,9 +58,10 @@ def prefetch_short_url(
         detail=f"URL {slug!r} not found",
     )
 
+
 def save_storage_state(
-        request: Request,
-        background_tasks: BackgroundTasks,
+    request: Request,
+    background_tasks: BackgroundTasks,
 ):
     yield
     if request.method in UNSAFE_METHODS:
@@ -70,12 +70,12 @@ def save_storage_state(
 
 
 def api_token_required(
-        request: Request,
-        api_token: Annotated[
-            HTTPAuthorizationCredentials | None,
-            Depends(static_api_token),
-        ] = None,
-    ) -> None:
+    request: Request,
+    api_token: Annotated[
+        HTTPAuthorizationCredentials | None,
+        Depends(static_api_token),
+    ] = None,
+) -> None:
     #  Header(alias="x-auth-token"),
     if not api_token:
         raise HTTPException(
@@ -92,11 +92,12 @@ def api_token_required(
                 detail="invalid token",
             )
 
+
 def user_basic_auth_required(
-        credentials: Annotated[
-                HTTPBasicCredentials | None,
-                Depends(user_basic_auth),
-            ] = None,
+    credentials: Annotated[
+        HTTPBasicCredentials | None,
+        Depends(user_basic_auth),
+    ] = None,
 ):
     if (
         credentials
@@ -107,6 +108,6 @@ def user_basic_auth_required(
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail= "UserCredentials required. Invalid credentials.",
+        detail="UserCredentials required. Invalid credentials.",
         headers={"WWW-Authenticate": "Basic"},
     )

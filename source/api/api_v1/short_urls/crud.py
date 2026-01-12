@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 class ShortUrlStorage(BaseModel):
     slug_to_short_url: dict[str, ShortUrl] = {}
 
-
     def save_state(self):
         SAVE_FILE.write_text(self.model_dump_json(indent=2))
         logger.info("Short url storage state saved.")
@@ -44,9 +43,7 @@ class ShortUrlStorage(BaseModel):
 
     def create(self, short_url_in: ShortUrlCreate) -> ShortUrl:
         logger.info(f"Creating '{short_url_in.slug}' short url.")
-        short_url = ShortUrl(
-            **short_url_in.model_dump()
-        )
+        short_url = ShortUrl(**short_url_in.model_dump())
 
         self.slug_to_short_url[short_url.slug] = short_url
         # self._save_to_file()
@@ -68,10 +65,10 @@ class ShortUrlStorage(BaseModel):
         return short_url
 
     def update_partial(
-            self,
-            short_url: ShortUrl,
-            short_url_in: ShortUrlPartialUpdate,
-        ):
+        self,
+        short_url: ShortUrl,
+        short_url_in: ShortUrlPartialUpdate,
+    ):
         new_data = short_url_in.model_dump(exclude_unset=True).items()
         for field_name, value in new_data:
             setattr(short_url, field_name, value)
@@ -79,7 +76,6 @@ class ShortUrlStorage(BaseModel):
         # self._save_to_file()
         self.save_state()
         return short_url
-
 
     def delete_by_slug(self, slug: str) -> None:
         logger.info(f"Deleting '{slug}' short url.")
@@ -121,8 +117,3 @@ storage = ShortUrlStorage()
 #     storage = ShortUrlStorage.from_state()
 # except ValidationError:
 #     storage = ShortUrlStorage()
-
-
-
-
-

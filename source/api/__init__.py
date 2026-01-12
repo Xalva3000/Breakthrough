@@ -8,4 +8,3 @@ router = APIRouter(prefix="/api")
 
 # Подключение всех роутеров версии 1
 router.include_router(api_v1_router)
-

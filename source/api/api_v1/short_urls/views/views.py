@@ -4,6 +4,7 @@ from typing import Annotated
 # from annotated_types import Len
 
 from api.api_v1.short_urls.schemas import ShortUrl, ShortUrlCreate, ShortUrlRead
+
 # from fastapi.responses import RedirectResponse
 from api.api_v1.short_urls.dependencies import (
     prefetch_short_url,
@@ -12,7 +13,15 @@ from api.api_v1.short_urls.dependencies import (
     api_token_required,
     user_basic_auth_required,
 )
-from fastapi import Request, HTTPException, status, Depends, APIRouter, Form, BackgroundTasks
+from fastapi import (
+    Request,
+    HTTPException,
+    status,
+    Depends,
+    APIRouter,
+    Form,
+    BackgroundTasks,
+)
 
 
 router = APIRouter(
@@ -20,17 +29,13 @@ router = APIRouter(
     dependencies=[
         Depends(save_storage_state),
         # Depends(api_token_required),
-    ]
+    ],
 )
 
 
-@router.get(
-    "/list/",
-    response_model=list[ShortUrlRead]
-)
+@router.get("/list/", response_model=list[ShortUrlRead])
 def read_short_urls_list() -> list[ShortUrl]:
     return storage.get_all()
-
 
 
 @router.post(
@@ -39,7 +44,7 @@ def read_short_urls_list() -> list[ShortUrl]:
     status_code=status.HTTP_201_CREATED,
     dependencies=[
         Depends(user_basic_auth_required),
-    ]
+    ],
 )
 def create_short_url(
     short_url_create: ShortUrlCreate,
@@ -51,6 +56,3 @@ def create_short_url(
     storage.create(new_url)
 
     return new_url
-
-
-
