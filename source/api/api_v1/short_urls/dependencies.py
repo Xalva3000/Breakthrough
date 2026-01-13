@@ -46,13 +46,9 @@ UNSAFE_METHODS = {
 
 
 def prefetch_short_url(slug: str) -> ShortUrl:
-
     url: ShortUrl | None = storage.get_by_slug(slug=slug)
-    # next((url for url in SHORT_URLS if url.slug == slug), None))
-
     if url:
         return url
-
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"URL {slug!r} not found",
@@ -82,9 +78,7 @@ def api_token_required(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token is required",
         )
-
     logger.info("API Token received")
-
     if request.method in UNSAFE_METHODS:
         if api_token not in API_TOKENS:
             raise HTTPException(

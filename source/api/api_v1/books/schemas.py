@@ -8,15 +8,16 @@ class PageBase(BaseModel):
 
 class BookBase(BaseModel):
     title: str = Field(min_length=1, max_length=200)
-    pages: dict[int, PageBase] = {}
+    pages: dict[str, PageBase] = {}
 
-    @field_validator('pages')
+    @field_validator("pages")
     @classmethod
     def validate_page_numbers(cls, pages):
         if pages:
             expected = list(range(1, len(pages) + 1))
-            actual = sorted(pages.keys())
+            actual = sorted(map(int, pages.keys()))
             if actual != expected:
-                raise ValueError('Номера страниц должны начинаться с 1 и идти последовательно')
+                raise ValueError(
+                    "Номера страниц должны начинаться с 1 и идти последовательно"
+                )
         return pages
-

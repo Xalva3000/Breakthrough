@@ -1,13 +1,39 @@
 from fastapi import HTTPException
 from starlette import status
 
-from api.api_v1.books.crud import book_storage
+from api.api_v1.books.crud import book_storage as storage
+from api.api_v1.books.schemas import BookBase, PageBase
 
-def prefetch_book(title):
-    book = book_storage.get_book(title)
+
+def prefetch_book(title: str):
+    book: BookBase = storage.get_book(title)
     if book:
         return book
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"BOOK {title} not found",
     )
+
+
+def prefetch_page(book_title, index: int):
+    page: PageBase = storage.get_page(book_title=book_title, index=index)
+    if page:
+        return page
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"PAGE {index} not found",
+    )
+
+
+def compose_and_create_book(book_data):
+    try:
+        # new_book = BookBase(
+        #     title=book_data['title'],
+        #     pages={page['index']: page['text'] for page in book_data['pages']}
+        # )
+        return storage.create(book_data)
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Book format is incorrect",
+        )

@@ -26,11 +26,13 @@ def create_default_urls(storage: ShortUrlStorage):
         storage.create(short_url_in=u2)
         print("video url added")
 
+
 def create_test_books(book_storage: BookStorage):
     page = PageBase(index=1, text="test_page")
-    book = BookBase(title="test", pages={1: page})
+    book = BookBase(title="test", pages={"1": page})
     book_storage.create(book)
     print("test book created")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
