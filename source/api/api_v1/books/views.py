@@ -19,7 +19,7 @@ router = APIRouter(prefix="/books")
     path="/{book_title}/",
     response_model=BookBase,
 )
-def get_book_by_title(
+async def get_book_by_title(
     book: Annotated[
         BookBase,
         Depends(prefetch_book),
@@ -32,7 +32,7 @@ def get_book_by_title(
     path="/{book_title}/{index}",
     response_model=PageBase,
 )
-def get_book_page_by_index(
+async def get_book_page_by_index(
     page: Annotated[
         PageBase,
         Depends(prefetch_page),
@@ -46,7 +46,7 @@ def get_book_page_by_index(
     response_model=BookBase,
     status_code=status.HTTP_201_CREATED,
 )
-def create_book(book_data: BookBase):
+async def create_book(book_data: BookBase):
     return compose_and_create_book(book_data)
 
 
@@ -54,7 +54,7 @@ def create_book(book_data: BookBase):
     path="/{book_title}/delete",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-def delete_book(book_title: str):
+async def delete_book(book_title: str):
     return delete_book_by_title(book_title)
 
 
@@ -63,5 +63,5 @@ def delete_book(book_title: str):
     response_model=BookBase,
     status_code=status.HTTP_200_OK,
 )
-def insert_or_replace_page(book_title: str, index: str, new_page: PageBase):
+async def insert_or_replace_page(book_title: str, index: str, new_page: PageBase):
     return insert_page_by_book_title(book_title, new_page)

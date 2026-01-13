@@ -16,9 +16,7 @@ def prefetch_book(book_title: str):
 
 
 def prefetch_page(book_title: str, index: str):
-    print(f"{book_title=}, {index=}")
     page: PageBase = storage.get_page(book_title=book_title, index=index)
-    print(page)
     if page:
         return page
     raise HTTPException(

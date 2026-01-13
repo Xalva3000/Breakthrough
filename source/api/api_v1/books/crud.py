@@ -27,7 +27,7 @@ class BookStorage(BaseModel):
     def insert_page(self, title, page: PageBase):
         book = self.books.get(title)
         if book:
-            book.pages[page.index] = page
+            book.pages[str(page.index)] = page
             self.save_to_file()
         return self.books.get(title)
 
