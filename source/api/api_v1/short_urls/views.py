@@ -12,7 +12,10 @@ from fastapi import Request, HTTPException, status, Depends, APIRouter, Form
 router = APIRouter(prefix="/short-urls")
 
 
-@router.get("/list/", response_model=list[ShortUrl])
+@router.get(
+    "/list/",
+    response_model=list[ShortUrl],
+)
 def read_short_urls_list() -> list[ShortUrl]:
     return storage.get_all()
 
