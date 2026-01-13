@@ -29,8 +29,7 @@ class BookStorage(BaseModel):
         if book:
             book.pages[page.index] = page
             self.save_to_file()
-            return True
-        return False
+        return self.books.get(title)
 
     def get_book(self, title):
         return self.books.get(title)

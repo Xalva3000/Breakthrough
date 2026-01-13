@@ -8,6 +8,7 @@ from api.api_v1.books.dependencies import (
     prefetch_page,
     compose_and_create_book,
     delete_book_by_title,
+    insert_page_by_book_title,
 )
 from api.api_v1.books.schemas import BookBase, PageBase
 
@@ -55,3 +56,12 @@ def create_book(book_data: BookBase):
 )
 def delete_book(book_title: str):
     return delete_book_by_title(book_title)
+
+
+@router.patch(
+    path="/{book_title}/{index}",
+    response_model=BookBase,
+    status_code=status.HTTP_200_OK,
+)
+def insert_or_replace_page(book_title: str, index: str, new_page: PageBase):
+    return insert_page_by_book_title(book_title, new_page)

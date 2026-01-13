@@ -45,3 +45,7 @@ def delete_book_by_title(title):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Book format is incorrect",
         )
+
+
+def insert_page_by_book_title(book_title, new_page):
+    return storage.insert_page(book_title, new_page)
