@@ -110,4 +110,4 @@ class BookStorage(BaseModel):
             self.books = {}
             return False
 
-
+book_storage = BookStorage()

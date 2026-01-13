@@ -4,7 +4,7 @@ from pydantic import AnyHttpUrl
 
 from api.api_v1.books.schemas import PageBase, BookBase
 from api.api_v1.short_urls.crud import storage, ShortUrlStorage
-from api.api_v1.books.crud import BookStorage
+from api.api_v1.books.crud import book_storage, BookStorage
 from fastapi import FastAPI
 
 from api.api_v1.short_urls.schemas import ShortUrlCreate
@@ -37,7 +37,6 @@ async def lifespan(app: FastAPI):
     # Действия до запуска приложения
     storage.init_storage_from_state()
     create_default_urls(storage)
-    book_storage = BookStorage()
     create_test_books(book_storage)
     # Функция ставится на паузу на время работы приложения
     yield
